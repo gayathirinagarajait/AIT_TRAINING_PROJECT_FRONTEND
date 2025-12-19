@@ -17,7 +17,7 @@ export const createProduct = async (data) => {
 export const getProducts = (params) =>
   api.get('/products', { params }).then(res => res.data);
 
-// ✅ FIXED: Update now uses FormData like create
+// FIXED: Update now uses FormData like create
 export const updateProduct = async (id, data) => {
   const formData = new FormData();
   Object.keys(data).forEach((key) => {

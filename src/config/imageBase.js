@@ -1,6 +1,34 @@
-// src/config/imageBase.js
-export const API_BASE_URL = 'http://localhost:3000'; 
-export const UPLOAD_BASE_URL = `${API_BASE_URL}/uploads/`;
+// In your ../../config/imageBase.js file:
+export const buildImageUrl = (fileName) => {
+  if (!fileName) {
+    console.warn('buildImageUrl: No filename provided');
+    return null;
+  }
 
-export const buildImageUrl = (fileName) =>
-  fileName ? `${UPLOAD_BASE_URL}${fileName}` : '';
+  // Clean the filename
+  const cleanFileName = fileName.trim();
+  if (!cleanFileName) {
+    console.warn('buildImageUrl: Empty filename after trimming');
+    return null;
+  }
+
+  const base = import.meta.env.VITE_API_URL;
+  
+  if (!base) {
+    console.error('buildImageUrl: VITE_API_URL is not defined in environment');
+    return null;
+  }
+
+  // If already absolute, return as is
+  if (cleanFileName.startsWith('http')) {
+    console.log('buildImageUrl: Already absolute URL:', cleanFileName);
+    return cleanFileName;
+  }
+
+  // Remove any leading slashes to ensure proper concatenation
+  const path = cleanFileName.replace(/^\/+/, '');
+  const url = `${base}/uploads/${path}`;
+  
+  console.log('buildImageUrl: Built URL:', url);
+  return url;
+};

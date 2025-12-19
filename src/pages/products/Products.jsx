@@ -100,27 +100,58 @@ export default function Products() {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    globalThis.addEventListener('keydown', handleKeyDown);
+    return () => globalThis.removeEventListener('keydown', handleKeyDown);
   }, [selectedImage, selectedProductImages, currentImageIndex]);
 
   // Handle image viewing
-  const handleViewImage = (product, imageUrlFromCell) => {
-    const fileNames = Array.isArray(product.images)
-      ? product.images
-      : product.images
-      ? [product.images]
-      : [];
+// Update handleViewImage in Products.js:
+const handleViewImage = (product, imageUrlFromCell) => {
+  console.log('handleViewImage called with:', { product, imageUrlFromCell });
+  
+  // Handle different image data structures
+  let fileNames = [];
+  
+  if (Array.isArray(product.images)) {
+    fileNames = product.images.filter(img => img && img.trim() !== '');
+  } else if (product.images && typeof product.images === 'string') {
+    fileNames = [product.images];
+  }
+  
+  console.log('File names found:', fileNames);
+  
+  // Build URLs
+  const images = fileNames
+    .map((name) => {
+      const url = buildImageUrl(name);
+      console.log(`Building URL for "${name}":`, url);
+      return url;
+    })
+    .filter(url => url !== null && url !== undefined);
+  
+  console.log('Built image URLs:', images);
+  
+  if (images.length === 0) {
+    console.warn('No valid images found for product:', product.name);
+    setToast({ 
+      open: true, 
+      message: 'No valid images found for this product', 
+      type: 'warning' 
+    });
+    return;
+  }
 
-    const images = fileNames.map(buildImageUrl);
+  // Find the clicked image
+  const index = images.findIndex((img) => img === imageUrlFromCell);
+  const startIndex = Math.max(index, 0);
+  
+  console.log('Setting images:', { images, startIndex, selectedImage: images[startIndex] });
 
-    const index = images.findIndex((img) => img === imageUrlFromCell);
-    const startIndex = index >= 0 ? index : 0;
+  setSelectedProductImages(images);
+  setCurrentImageIndex(startIndex);
+  setSelectedImage(images[startIndex]);
+};
 
-    setSelectedProductImages(images);
-    setCurrentImageIndex(startIndex);
-    setSelectedImage(images[startIndex] || null);
-  };
 
   const handleCloseImage = () => {
     setSelectedImage(null);
@@ -175,7 +206,8 @@ export default function Products() {
 
       {/* IMAGE VIEW MODAL */}
       <Modal
-        open={!!selectedImage}
+        open={Boolean(selectedImage && selectedProductImages.length > 0)}
+
         onClose={handleCloseImage}
         aria-labelledby="image-modal"
         BackdropProps={{
@@ -266,17 +298,23 @@ export default function Products() {
               </>
             )}
 
-            {selectedImage && (
-              <img
-                src={selectedImage}
-                alt="Product"
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  objectFit: 'contain',
-                }}
-              />
-            )}
+{selectedImage && (
+  <img
+    src={selectedImage}
+    alt="Product"
+    style={{
+      maxWidth: '100%',
+      maxHeight: '100%',
+      objectFit: 'contain',
+    }}
+    onError={(e) => {
+      console.error('Image failed to load:', selectedImage);
+      e.currentTarget.style.display = 'none';
+    }}
+  />
+)}
+
+
           </Box>
 
           {selectedProductImages.length > 1 && (

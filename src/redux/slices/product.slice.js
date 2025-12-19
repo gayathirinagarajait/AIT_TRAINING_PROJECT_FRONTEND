@@ -11,7 +11,7 @@ export const fetchProducts = createAsyncThunk(
 );
 
 const productSlice = createSlice({
-  name: 'products', // This determines the state path: state.products
+  name: 'products', 
   initialState: { 
     list: [],
     loading: false,

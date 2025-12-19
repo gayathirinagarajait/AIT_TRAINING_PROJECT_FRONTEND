@@ -2,171 +2,148 @@ import { TextField, Button, Box, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Clear } from '@mui/icons-material';
 
-export default function ProductFilters({ onApply, onReset, hasActiveFilters }) {
-  const [filters, setFilters] = useState({
-    name: '',
-    stock: '',
-    startDate: '',
-    endDate: '',
-  });
+const DEFAULT_FILTERS = {
+  name: '',
+  stock: '',
+  startDate: '',
+  endDate: '',
+};
 
-  // Load from sessionStorage on mount
+export default function ProductFilters({ onApply, onReset, hasActiveFilters }) {
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+
+  // ✅ SAFE restore from sessionStorage
   useEffect(() => {
     const saved = sessionStorage.getItem('productFilters');
     if (saved) {
-      setFilters(JSON.parse(saved));
+      try {
+        const parsed = JSON.parse(saved);
+        setFilters({
+          ...DEFAULT_FILTERS, // 👈 ensures no undefined
+          ...parsed,
+        });
+      } catch (e) {
+        console.error('Invalid filter cache', e);
+      }
     }
   }, []);
 
   const handleApply = () => {
-    // Clean the filters (remove empty values)
     const cleanFilters = {};
-    Object.keys(filters).forEach(key => {
+
+    Object.keys(filters).forEach((key) => {
       if (filters[key] !== '') {
         cleanFilters[key] = filters[key];
       }
     });
-    
+
     sessionStorage.setItem('productFilters', JSON.stringify(cleanFilters));
     onApply(cleanFilters);
   };
 
   const handleReset = () => {
-    const resetFilters = {
-      name: '',
-      stock: '',
-      startDate: '',
-      endDate: '',
-    };
-    setFilters(resetFilters);
+    setFilters(DEFAULT_FILTERS);
     sessionStorage.removeItem('productFilters');
     onReset();
   };
 
-  const handleClearField = (fieldName) => {
-    setFilters({ ...filters, [fieldName]: '' });
+  const handleChange = (field) => (e) => {
+    setFilters((prev) => ({
+      ...prev,
+      [field]: e.target.value ?? '', // 👈 NEVER undefined
+    }));
   };
 
+  const handleClearField = (field) => {
+    setFilters((prev) => ({
+      ...prev,
+      [field]: '',
+    }));
+  };
+
+  const renderField = (props, field) => (
+    <Box sx={{ position: 'relative' }}>
+      <TextField {...props} value={filters[field]} />
+      {filters[field] && (
+        <IconButton
+          size="small"
+          onClick={() => handleClearField(field)}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: '50%',
+            transform: 'translateY(-50%)',
+          }}
+        >
+          <Clear fontSize="small" />
+        </IconButton>
+      )}
+    </Box>
+  );
+
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      gap: 2, 
-      mb: 2, 
-      p: 2, 
-      backgroundColor: '#f5f5f5',
-      borderRadius: 1,
-      alignItems: 'center'
-    }}>
-      <Box sx={{ position: 'relative' }}>
-        <TextField
-          label="Name"
-          value={filters.name}
-          onChange={(e) => setFilters({ ...filters, name: e.target.value })}
-          size="small"
-        />
-        {filters.name && (
-          <IconButton
-            size="small"
-            onClick={() => handleClearField('name')}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: '50%',
-              transform: 'translateY(-50%)',
-            }}
-          >
-            <Clear fontSize="small" />
-          </IconButton>
-        )}
-      </Box>
+    <Box
+      sx={{
+        display: 'flex',
+        gap: 2,
+        mb: 2,
+        p: 2,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 1,
+        alignItems: 'center',
+        flexWrap: 'wrap',
+      }}
+    >
+      {renderField(
+        {
+          label: 'Name',
+          size: 'small',
+          onChange: handleChange('name'),
+        },
+        'name'
+      )}
 
-      <Box sx={{ position: 'relative' }}>
-        <TextField
-          label="Stock Available"
-          placeholder="true/false"
-          value={filters.stock}
-          onChange={(e) => setFilters({ ...filters, stock: e.target.value })}
-          size="small"
-        />
-        {filters.stock && (
-          <IconButton
-            size="small"
-            onClick={() => handleClearField('stock')}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: '50%',
-              transform: 'translateY(-50%)',
-            }}
-          >
-            <Clear fontSize="small" />
-          </IconButton>
-        )}
-      </Box>
+      {renderField(
+        {
+          label: 'Stock Available',
+          placeholder: 'true / false',
+          size: 'small',
+          onChange: handleChange('stock'),
+        },
+        'stock'
+      )}
 
-      <Box sx={{ position: 'relative' }}>
-        <TextField
-          type="date"
-          label="Start Date"
-          InputLabelProps={{ shrink: true }}
-          value={filters.startDate}
-          onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-          size="small"
-        />
-        {filters.startDate && (
-          <IconButton
-            size="small"
-            onClick={() => handleClearField('startDate')}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: '50%',
-              transform: 'translateY(-50%)',
-            }}
-          >
-            <Clear fontSize="small" />
-          </IconButton>
-        )}
-      </Box>
+      {renderField(
+        {
+          type: 'date',
+          label: 'Start Date',
+          InputLabelProps: { shrink: true },
+          size: 'small',
+          onChange: handleChange('startDate'),
+        },
+        'startDate'
+      )}
 
-      <Box sx={{ position: 'relative' }}>
-        <TextField
-          type="date"
-          label="End Date"
-          InputLabelProps={{ shrink: true }}
-          value={filters.endDate}
-          onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-          size="small"
-        />
-        {filters.endDate && (
-          <IconButton
-            size="small"
-            onClick={() => handleClearField('endDate')}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: '50%',
-              transform: 'translateY(-50%)',
-            }}
-          >
-            <Clear fontSize="small" />
-          </IconButton>
-        )}
-      </Box>
+      {renderField(
+        {
+          type: 'date',
+          label: 'End Date',
+          InputLabelProps: { shrink: true },
+          size: 'small',
+          onChange: handleChange('endDate'),
+        },
+        'endDate'
+      )}
 
-      <Button 
-        variant="contained" 
-        onClick={handleApply}
-        size="small"
-      >
+      <Button variant="contained" size="small" onClick={handleApply}>
         Apply
       </Button>
 
-      <Button 
-        variant="outlined" 
+      <Button
+        variant="outlined"
+        size="small"
         onClick={handleReset}
         disabled={!hasActiveFilters}
-        size="small"
       >
         Reset
       </Button>
