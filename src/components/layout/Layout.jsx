@@ -8,25 +8,19 @@ export default function Layout({ children }) {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
 
-  // Sidebar widths
-  const drawerWidth = 240;
-  const collapsedWidth = 64;
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar */}
+    <Box sx={{ display: 'flex', minHeight: '100vh', width: '100vw', overflow: 'hidden' }}>
+      {/* Sidebar - State managed here to control width transitions */}
       <Sidebar 
         open={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)}
-        drawerWidth={drawerWidth}
-        collapsedWidth={collapsedWidth}
+        setOpen={setSidebarOpen} 
       />
       
-      {/* Main content area */}
+      {/* Main content area - Automatically fills remaining space */}
       <Box
         component="main"
         sx={{
@@ -34,25 +28,23 @@ export default function Layout({ children }) {
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
-          width: '100%',
-          ml: isMobile ? 0 : (sidebarOpen ? `${drawerWidth}px` : `${collapsedWidth}px`),
-          transition: theme.transitions.create(['margin-left', 'width'], {
+          // Removed manual margin-left and calc width
+          width: '100%', 
+          transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
           }),
         }}
       >
-        {/* Header */}
         <Header onMenuClick={toggleSidebar} />
         
-        {/* Content */}
         <Box
           sx={{
-            flexGrow: 2,
-            p: 2,
-            backgroundColor: 'background.default',
-            overflow: 'auto',
-            width: '90%',
+            flexGrow: 1,
+            p: { xs: 2, md: 3 },
+            backgroundColor: '#F8FAFC', // Consistent background
+            width: '100%', 
+            boxSizing: 'border-box' // Prevents padding from creating right-side gaps
           }}
         >
           {children}
