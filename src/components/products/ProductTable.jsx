@@ -34,7 +34,7 @@ export default function ProductTable({
       headerName: 'Stock',
       flex: 1,
     },
-   // In ProductTable.js, update the renderCell for images:
+
 {
   field: 'images',
   headerName: 'Image',
@@ -105,7 +105,7 @@ export default function ProductTable({
       headerName: 'Created Date',
       flex: 1,
 
-      // ✅ renderCell is SAFER than valueGetter
+      //renderCell is SAFER than valueGetter
       renderCell: (params) => {
         const row = params?.row;
         if (!row) return '—';
@@ -162,11 +162,11 @@ export default function ProductTable({
       </Typography>
 
       <DataGrid
-        rows={Array.isArray(rows) ? rows : []}   // 🔐 SAFE
+        rows={Array.isArray(rows) ? rows : []} 
         columns={columns}
         autoHeight
         disableRowSelectionOnClick
-        getRowId={(row) => row?._id || row?.id} // 🔐 SAFE
+        getRowId={(row) => row?._id || row?.id} 
         pageSize={5}
         rowsPerPageOptions={[5, 10]}
         sx={{

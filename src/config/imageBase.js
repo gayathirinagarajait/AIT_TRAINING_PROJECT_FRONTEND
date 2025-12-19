@@ -21,14 +21,12 @@ export const buildImageUrl = (fileName) => {
 
   // If already absolute, return as is
   if (cleanFileName.startsWith('http')) {
-    console.log('buildImageUrl: Already absolute URL:', cleanFileName);
     return cleanFileName;
   }
 
-  // Remove any leading slashes to ensure proper concatenation
+  // remove any leading slashes to ensure proper concatenation
   const path = cleanFileName.replace(/^\/+/, '');
   const url = `${base}/uploads/${path}`;
   
-  console.log('buildImageUrl: Built URL:', url);
   return url;
 };

@@ -107,7 +107,6 @@ export default function Products() {
   // Handle image viewing
 // Update handleViewImage in Products.js:
 const handleViewImage = (product, imageUrlFromCell) => {
-  console.log('handleViewImage called with:', { product, imageUrlFromCell });
   
   // Handle different image data structures
   let fileNames = [];
@@ -118,18 +117,15 @@ const handleViewImage = (product, imageUrlFromCell) => {
     fileNames = [product.images];
   }
   
-  console.log('File names found:', fileNames);
   
   // Build URLs
   const images = fileNames
     .map((name) => {
       const url = buildImageUrl(name);
-      console.log(`Building URL for "${name}":`, url);
       return url;
     })
     .filter(url => url !== null && url !== undefined);
   
-  console.log('Built image URLs:', images);
   
   if (images.length === 0) {
     console.warn('No valid images found for product:', product.name);
@@ -145,7 +141,6 @@ const handleViewImage = (product, imageUrlFromCell) => {
   const index = images.findIndex((img) => img === imageUrlFromCell);
   const startIndex = Math.max(index, 0);
   
-  console.log('Setting images:', { images, startIndex, selectedImage: images[startIndex] });
 
   setSelectedProductImages(images);
   setCurrentImageIndex(startIndex);
@@ -177,17 +172,17 @@ const handleViewImage = (product, imageUrlFromCell) => {
 
   return (
     <>
-      {/* FILTER */}
+      {/* filter */}
       <ProductFilters
         onApply={applyFilters}
         onReset={resetFilters}
         hasActiveFilters={hasActiveFilters()}
       />
 
-      {/* FORM */}
+      {/* form */}
       <ProductForm selectedProduct={editProduct} onSuccess={refresh} />
 
-      {/* TABLE */}
+      {/* table */}
       <ProductTable
         rows={products}
         onEdit={setEditProduct}
@@ -195,7 +190,7 @@ const handleViewImage = (product, imageUrlFromCell) => {
         onViewImage={handleViewImage}
       />
 
-      {/* DELETE CONFIRM */}
+      {/* delete confirmation */}
       <ConfirmDialog
         open={!!deleteItem}
         title="Delete Product"
@@ -204,7 +199,7 @@ const handleViewImage = (product, imageUrlFromCell) => {
         onConfirm={confirmDelete}
       />
 
-      {/* IMAGE VIEW MODAL */}
+      {/* image view model*/}
       <Modal
         open={Boolean(selectedImage && selectedProductImages.length > 0)}
 

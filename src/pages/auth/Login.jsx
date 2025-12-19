@@ -85,6 +85,8 @@ export default function Login() {
         message: err.response?.data?.message || 'Invalid email or password',
         type: 'error',
       });
+     
+     
       // Clear password on error
       setForm({ ...form, password: '' });
     } finally {
@@ -211,10 +213,11 @@ export default function Login() {
                 }}
               />
 
+             
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                 <Link
                   component="button"
-                  type="button"  // CRITICAL FIX: Added type="button"
+                  type="button"  
                   variant="body2"
                   onClick={() => navigate('/forgot-password')}
                   sx={{ color: 'primary.main' }}
@@ -224,7 +227,7 @@ export default function Login() {
               </Box>
 
               <Button
-                type="submit"  // CRITICAL FIX: Now the ONLY submit button in the form
+                type="submit"  
                 fullWidth
                 variant="contained"
                 size="large"
@@ -246,13 +249,14 @@ export default function Login() {
                 {loading ? 'Signing In...' : 'Sign In'}
               </Button>
 
+             
               <Grid container justifyContent="center" sx={{ mt: 3 }}>
                 <Grid item>
                   <Typography variant="body2" color="text.secondary">
                     Don't have an account?{' '}
                     <Link
                       component="button"
-                      type="button"  // CRITICAL FIX: Added type="button"
+                      type="button"  
                       variant="body2"
                       onClick={() => navigate('/register')}
                       sx={{ 
@@ -286,6 +290,7 @@ export default function Login() {
         </Box>
       </Container>
 
+      
       <Loader open={loading} />
       <AppSnackbar 
         open={toast.open} 

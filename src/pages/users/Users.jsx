@@ -62,13 +62,13 @@ export default function Users() {
   };
 
   const handleEditSuccess = (message = 'User updated successfully') => {
-    setEditUser(null); // Reset edit form
+    setEditUser(null); 
     setToast({ 
       open: true, 
       message, 
       type: 'success' 
     });
-    loadUsers(); // Refresh user list
+    loadUsers(); 
   };
 
   const handleCancelEdit = () => {
@@ -79,9 +79,7 @@ export default function Users() {
     <>
       {/* VIEW TOGGLE */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Box>
-          {/* Optional: Add user button or title here */}
-        </Box>
+       
         <ToggleButtonGroup
           value={view}
           exclusive
@@ -93,7 +91,7 @@ export default function Users() {
         </ToggleButtonGroup>
       </Box>
 
-      {/* USER FORM - Always visible for editing */}
+      {/* USER FORM */}
       {editUser && (
         <UserForm
           selectedUser={editUser}
@@ -102,7 +100,7 @@ export default function Users() {
         />
       )}
 
-      {/* CONDITIONAL VIEW */}
+      {/* conditonal View */}
       {view === 'list' ? (
         <UserTable
           rows={users}

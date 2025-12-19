@@ -12,14 +12,14 @@ const DEFAULT_FILTERS = {
 export default function ProductFilters({ onApply, onReset, hasActiveFilters }) {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
-  // ✅ SAFE restore from sessionStorage
+  // restore from sessionStorage
   useEffect(() => {
     const saved = sessionStorage.getItem('productFilters');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         setFilters({
-          ...DEFAULT_FILTERS, // 👈 ensures no undefined
+          ...DEFAULT_FILTERS, 
           ...parsed,
         });
       } catch (e) {

@@ -18,8 +18,8 @@ export default function ProductForm({ selectedProduct, onSuccess }) {
     price: '',
     stock: '',
   });
-  const [newImages, setNewImages] = useState([]); // New images to upload
-  const [existingImages, setExistingImages] = useState([]); // Current images from DB
+  const [newImages, setNewImages] = useState([]); 
+  const [existingImages, setExistingImages] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({
     open: false,
@@ -72,7 +72,7 @@ export default function ProductForm({ selectedProduct, onSuccess }) {
     }
   };
 
-  // ✅ FIXED: Prepare data in format service expects
+  // prepare data in format service expects
   const submit = async () => {
     try {
       setLoading(true);
@@ -81,8 +81,8 @@ export default function ProductForm({ selectedProduct, onSuccess }) {
         name: form.name,
         price: form.price,
         stock: form.stock,
-        existingImages, // Images to KEEP
-        images: newImages, // New images to UPLOAD
+        existingImages, 
+        images: newImages, 
       };
 
       if (selectedProduct) {

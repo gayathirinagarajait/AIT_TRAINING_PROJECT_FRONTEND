@@ -28,7 +28,7 @@ export default function Layout({ children }) {
           display: 'flex',
           flexDirection: 'column',
           minHeight: '100vh',
-          // Removed manual margin-left and calc width
+          // removed manual margin-left and calc width
           width: '100%', 
           transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
@@ -42,9 +42,9 @@ export default function Layout({ children }) {
           sx={{
             flexGrow: 1,
             p: { xs: 2, md: 3 },
-            backgroundColor: '#F8FAFC', // Consistent background
+            backgroundColor: '#F8FAFC', 
             width: '100%', 
-            boxSizing: 'border-box' // Prevents padding from creating right-side gaps
+            boxSizing: 'border-box' 
           }}
         >
           {children}
