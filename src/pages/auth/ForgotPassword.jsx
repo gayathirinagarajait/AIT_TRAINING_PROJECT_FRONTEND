@@ -72,7 +72,7 @@ export default function ForgotPassword() {
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       submit();
     }
@@ -145,15 +145,18 @@ export default function ForgotPassword() {
                   setEmail(e.target.value);
                   if (errors.email) setErrors({ ...errors, email: '' });
                 }}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 error={!!errors.email}
                 helperText={errors.email}
-                InputProps={{
+                slotProps={{
+                     input: {
+                    'data-cy': 'email',
                   startAdornment: (
                     <InputAdornment position="start">
                       <EmailIcon color="action" />
                     </InputAdornment>
                   ),
+                  },
                 }}
               />
 

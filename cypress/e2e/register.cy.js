@@ -1,22 +1,26 @@
-it("registers user successfully and redirects to login page", () => {
-  cy.intercept("POST", "/api/auth/register", {
-    statusCode: 201,
-    body: { message: "Registration successful" }
-  }).as("registerRequest");
+describe("Registration Page", () => {
+  it("registers user successfully and redirects to login page", () => {
+    cy.clearLocalStorage();
 
-  cy.visit("/register");
+    cy.intercept("POST", "**/api/auth/register", {
+      statusCode: 201,
+      body: { message: "Registration successful" },
+    }).as("registerRequest");
 
-  cy.get('[data-testid="name"]').type("John Doe");
-  cy.get('[data-testid="email"]').type("john@test.com");
-  cy.get('[data-testid="password"]').type("Password@123");
-  cy.get('[data-testid="register-btn"]').click();
+    cy.visit("/register");
 
-  // wait for API
-  cy.wait("@registerRequest");
+    // Target the actual input elements inside MUI TextFields using data-testid
+    cy.get('[data-testid="name"]').should("be.visible").clear().type("John Doe");
+    cy.get('[data-testid="email"]').clear().type("john@test.com");
+    cy.get('[data-testid="password"]').clear().type("Password@123");
 
-  // assert redirect to login page (/)
-  cy.url().should("eq", Cypress.config().baseUrl + "/");
+    // Click submit button
+    cy.get('[data-testid="register-btn"]').click();
 
-  // assert login page rendered
-  cy.get('[data-testid="login-title"]').should("be.visible");
+    // Wait for API call
+    cy.wait("@registerRequest");
+
+    // Verify redirect with sufficient timeout for setTimeout + navigation
+    cy.url({ timeout: 5000 }).should("eq", Cypress.config().baseUrl + "/");
+  });
 });

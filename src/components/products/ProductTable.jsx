@@ -43,7 +43,9 @@ export default function ProductTable({
   renderCell: (params) => {
     const row = params?.row;
     const newLocal = '—';
-    if (!row) return newLocal;
+    if (!row) array.forEach(element => {
+      return newLocal;
+    });
 
     // Handle different possible image data structures
     let imageArray = [];

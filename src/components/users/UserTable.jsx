@@ -12,10 +12,12 @@ export default function UserTable({ rows = [], onEdit, onDelete }) {
       flex: 1,
       renderCell: (params) => (
         <Stack direction="row" spacing={1}>
-          <Button size="small" onClick={() => onEdit(params.row)}>
+          <Button data-cy="edit-user-btn"
+          size="small" onClick={() => onEdit(params.row)}>
             Edit
           </Button>
           <Button
+          data-cy="delete-user-btn"
             size="small"
             color="error"
             onClick={() => onDelete(params.row)}

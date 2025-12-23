@@ -85,8 +85,6 @@ export default function Login() {
         message: err.response?.data?.message || 'Invalid email or password',
         type: 'error',
       });
-     
-     
       // Clear password on error
       setForm({ ...form, password: '' });
     } finally {
@@ -153,67 +151,71 @@ export default function Login() {
             </Box>
 
             <Box component="form" onSubmit={submit} noValidate sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={form.email}
-                onChange={(e) => {
-                  setForm({ ...form, email: e.target.value });
-                  if (errors.email) setErrors({ ...errors, email: '' });
-                }}
-                error={!!errors.email}
-                helperText={errors.email}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailIcon color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                autoComplete="current-password"
-                value={form.password}
-                onChange={(e) => {
-                  setForm({ ...form, password: e.target.value });
-                  if (errors.password) setErrors({ ...errors, password: '' });
-                }}
-                onKeyDown={handleKeyDown}
-                error={!!errors.password}
-                helperText={errors.password}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockOutlinedIcon color="action" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment 
-                      position="end" 
-                      sx={{ cursor: 'pointer' }}
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </InputAdornment>
-                  ),
-                }}
-              />
+             <TextField
+  margin="normal"
+  required
+  fullWidth
+  id="email"
+  label="Email Address"
+  name="email"
+  autoComplete="email"
+  autoFocus
+  value={form.email}
+  onChange={(e) => {
+    setForm({ ...form, email: e.target.value });
+    if (errors.email) setErrors({ ...errors, email: '' });
+  }}
+  error={!!errors.email}
+  helperText={errors.email}
+  slotProps={{
+    input: {
+      startAdornment: (
+        <InputAdornment position="start">
+          <EmailIcon color="action" />
+        </InputAdornment>
+      ),
+    },
+  }}
+/>
 
-             
+<TextField
+  margin="normal"
+  required
+  fullWidth
+  name="password"
+  label="Password"
+  type={showPassword ? 'text' : 'password'}
+  id="password"
+  autoComplete="current-password"
+  value={form.password}
+  onChange={(e) => {
+    setForm({ ...form, password: e.target.value });
+    if (errors.password) setErrors({ ...errors, password: '' });
+  }}
+  onKeyDown={handleKeyDown}
+  error={!!errors.password}
+  helperText={errors.password}
+  slotProps={{
+    input: {
+      startAdornment: (
+        <InputAdornment position="start">
+          <LockOutlinedIcon color="action" />
+        </InputAdornment>
+      ),
+      endAdornment: (
+        <InputAdornment
+          position="end"
+          sx={{ cursor: 'pointer' }}
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+        </InputAdornment>
+      ),
+    },
+  }}
+/>
+
+
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                 <Link
                   component="button"
@@ -249,7 +251,6 @@ export default function Login() {
                 {loading ? 'Signing In...' : 'Sign In'}
               </Button>
 
-             
               <Grid container justifyContent="center" sx={{ mt: 3 }}>
                 <Grid item>
                   <Typography variant="body2" color="text.secondary">
@@ -290,7 +291,6 @@ export default function Login() {
         </Box>
       </Container>
 
-      
       <Loader open={loading} />
       <AppSnackbar 
         open={toast.open} 

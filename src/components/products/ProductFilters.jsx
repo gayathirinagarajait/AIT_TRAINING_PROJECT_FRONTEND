@@ -50,7 +50,7 @@ export default function ProductFilters({ onApply, onReset, hasActiveFilters }) {
   const handleChange = (field) => (e) => {
     setFilters((prev) => ({
       ...prev,
-      [field]: e.target.value ?? '', // 👈 NEVER undefined
+      [field]: e.target.value ?? '',
     }));
   };
 

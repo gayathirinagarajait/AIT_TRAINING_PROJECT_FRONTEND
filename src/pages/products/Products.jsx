@@ -104,8 +104,6 @@ export default function Products() {
     return () => globalThis.removeEventListener('keydown', handleKeyDown);
   }, [selectedImage, selectedProductImages, currentImageIndex]);
 
-  // Handle image viewing
-// Update handleViewImage in Products.js:
 const handleViewImage = (product, imageUrlFromCell) => {
   
   // Handle different image data structures
@@ -172,23 +170,34 @@ const handleViewImage = (product, imageUrlFromCell) => {
 
   return (
     <>
-      {/* filter */}
-      <ProductFilters
-        onApply={applyFilters}
-        onReset={resetFilters}
-        hasActiveFilters={hasActiveFilters()}
-      />
 
-      {/* form */}
-      <ProductForm selectedProduct={editProduct} onSuccess={refresh} />
+      {/* Filters */}
+<Box data-cy="product-filters">
+  <ProductFilters
+    onApply={applyFilters}
+    onReset={resetFilters}
+    hasActiveFilters={hasActiveFilters()}
+  />
+</Box>
 
-      {/* table */}
-      <ProductTable
-        rows={products}
-        onEdit={setEditProduct}
-        onDelete={setDeleteItem}
-        onViewImage={handleViewImage}
-      />
+{/* Form */}
+<Box data-cy="product-form">
+  <ProductForm
+    selectedProduct={editProduct}
+    onSuccess={refresh}
+  />
+</Box>
+
+{/* Table */}
+<Box data-cy="product-table">
+  <ProductTable
+    rows={products}
+    onEdit={setEditProduct}
+    onDelete={setDeleteItem}
+    onViewImage={handleViewImage}
+  />
+</Box>
+
 
       {/* delete confirmation */}
       <ConfirmDialog
@@ -295,6 +304,7 @@ const handleViewImage = (product, imageUrlFromCell) => {
 
 {selectedImage && (
   <img
+   data-cy="product-image"
     src={selectedImage}
     alt="Product"
     style={{

@@ -100,11 +100,12 @@ export default function ResetPassword() {
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      submit();
-    }
-  };
+ const handleKeyDown = (e) => {
+  if (e.key === 'Enter') {
+    submit();
+  }
+};
+
 
   return (
     <>
@@ -174,12 +175,15 @@ export default function ResetPassword() {
                 }}
                 error={!!errors.email}
                 helperText={errors.email}
-                InputProps={{
+                slotProps={{
+                  input: {
+                    'data-cy': 'email',
                   startAdornment: (
                     <InputAdornment position="start">
                       <EmailIcon color="action" />
                     </InputAdornment>
                   ),
+                },
                 }}
               />
 
@@ -192,18 +196,21 @@ export default function ResetPassword() {
                 name="otp"
                 value={form.otp}
                 onChange={(e) => {
-                  setForm({ ...form, otp: e.target.value.replace(/\D/g, '').slice(0, 6) });
+                  setForm({ ...form, otp: e.target.value.replaceAll(/\D/g, '').slice(0, 6) });
                   if (errors.otp) setErrors({ ...errors, otp: '' });
                 }}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 error={!!errors.otp}
                 helperText={errors.otp}
-                InputProps={{
+                slotProps={{
+                  input:{
+                    'data-cy': 'otp',
                   startAdornment: (
                     <InputAdornment position="start">
                       <VpnKeyIcon color="action" />
                     </InputAdornment>
                   ),
+                },
                 }}
               />
 
@@ -222,12 +229,15 @@ export default function ResetPassword() {
                 }}
                 error={!!errors.newPassword}
                 helperText={errors.newPassword}
-                InputProps={{
+                slotProps={{
+                  input : {
+                    'data-cy': 'newPassword',
                   startAdornment: (
                     <InputAdornment position="start">
                       <LockIcon color="action" />
                     </InputAdornment>
                   ),
+                  },
                 }}
               />
 
@@ -244,15 +254,19 @@ export default function ResetPassword() {
                   setForm({ ...form, confirmPassword: e.target.value });
                   if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: '' });
                 }}
-                onKeyPress={handleKeyPress}
+                const ={handleKeyDown}
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword}
-                InputProps={{
+                slotProps={{
+                  input: {
+                    'data-cy': 'ConfirmPassword',
                   startAdornment: (
+                    
                     <InputAdornment position="start">
                       <LockIcon color="action" />
                     </InputAdornment>
                   ),
+                  }
                 }}
               />
 

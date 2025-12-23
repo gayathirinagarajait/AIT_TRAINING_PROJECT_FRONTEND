@@ -18,9 +18,11 @@ export default function ProductForm({ selectedProduct, onSuccess }) {
     price: '',
     stock: '',
   });
-  const [newImages, setNewImages] = useState([]); 
-  const [existingImages, setExistingImages] = useState([]); 
+
+  const [newImages, setNewImages] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const [toast, setToast] = useState({
     open: false,
     message: '',
@@ -29,68 +31,76 @@ export default function ProductForm({ selectedProduct, onSuccess }) {
 
   const fileInputRef = useRef(null);
 
-  // Prefill data when editing
+  /* PREFILL ON EDIT */
   useEffect(() => {
     if (selectedProduct) {
       setForm({
-        name: selectedProduct.name,
-        price: selectedProduct.price,
-        stock: selectedProduct.stock,
+        name: selectedProduct.name ?? '',
+        price: selectedProduct.price ?? '',
+        stock: selectedProduct.stock ?? '',
       });
-      setExistingImages(Array.isArray(selectedProduct.images) ? selectedProduct.images : []);
+
+      setExistingImages(
+        Array.isArray(selectedProduct.images) ? selectedProduct.images : []
+      );
+
       setNewImages([]);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } else {
       resetForm();
     }
   }, [selectedProduct]);
 
+  /* HANDLERS */
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setNewImages(files);
+    if (!files.length) return;
+
+    setNewImages((prev) => [...prev, ...files]);
+
+    // ✅ reset input so same file can be added again
+    e.target.value = '';
   };
 
   const removeExistingImage = (index) => {
-    const updated = [...existingImages];
-    updated.splice(index, 1);
-    setExistingImages(updated);
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeNewImage = (index) => {
+    setNewImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const resetForm = () => {
     setForm({ name: '', price: '', stock: '' });
     setNewImages([]);
     setExistingImages([]);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // prepare data in format service expects
+  /* SUBMIT */
   const submit = async () => {
     try {
       setLoading(true);
 
-      const submitData = {
+      const payload = {
         name: form.name,
         price: form.price,
         stock: form.stock,
-        existingImages, 
-        images: newImages, 
+        existingImages,
+        images: newImages,
       };
 
       if (selectedProduct) {
-        await updateProduct(selectedProduct._id, submitData);
-        setToast({ open: true, message: 'Product updated successfully', type: 'success' });
+        await updateProduct(selectedProduct._id, payload);
+        setToast({ open: true, message: 'Product updated', type: 'success' });
       } else {
-        await createProduct(submitData);
-        setToast({ open: true, message: 'Product created successfully', type: 'success' });
+        await createProduct(payload);
+        setToast({ open: true, message: 'Product created', type: 'success' });
       }
 
       onSuccess();
@@ -132,7 +142,6 @@ export default function ProductForm({ selectedProduct, onSuccess }) {
           value={form.price}
           onChange={handleChange}
           required
-          InputProps={{ inputProps: { min: 0, step: 0.01 } }}
         />
 
         <TextField
@@ -144,52 +153,51 @@ export default function ProductForm({ selectedProduct, onSuccess }) {
           value={form.stock}
           onChange={handleChange}
           required
-          InputProps={{ inputProps: { min: 0 } }}
         />
 
-        {/* EXISTING IMAGES - Show during update */}
+        {/* EXISTING IMAGES */}
         {selectedProduct && existingImages.length > 0 && (
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle2" mb={1}>Current Images:</Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap" mb={2}>
-              {existingImages.map((imageUrl, index) => (
+          <Box mt={2}>
+            <Typography variant="subtitle2">Existing Images</Typography>
+            <Stack direction="row" spacing={1} flexWrap="wrap">
+              {existingImages.map((img, index) => (
                 <Chip
                   key={index}
                   label={`Image ${index + 1}`}
                   onDelete={() => removeExistingImage(index)}
-                  avatar={
-                    <img 
-                      src={imageUrl} 
-                      alt="product"
-                      style={{ width: 24, height: 24, objectFit: 'cover', borderRadius: 12 }}
-                    />
-                  }
                 />
               ))}
             </Stack>
           </Box>
         )}
 
-        {/* NEW IMAGE UPLOAD */}
-        <Box sx={{ mt: 2 }}>
+        {/* NEW IMAGES */}
+        {newImages.length > 0 && (
+          <Box mt={2}>
+            <Typography variant="subtitle2">New Images</Typography>
+            <Stack direction="row" spacing={1} flexWrap="wrap">
+              {newImages.map((file, index) => (
+                <Chip
+                  key={index}
+                  label={file.name}
+                  onDelete={() => removeNewImage(index)}
+                />
+              ))}
+            </Stack>
+          </Box>
+        )}
+
+        {/* FILE INPUT */}
+        <Box mt={2}>
           <input
             type="file"
-            name="images"
             multiple
-            onChange={handleImageChange}
-            ref={fileInputRef}
             accept="image/*"
-            style={{ display: 'block', marginTop: 8 }}
+            ref={fileInputRef}
+            onChange={handleImageChange}
           />
           <FormHelperText>
-            New files to add: {newImages.length} {newImages.length === 1 ? 'file' : 'files'}
-            {newImages.length > 0 && (
-              <Stack component="span" spacing={0.5} sx={{ ml: 1, fontSize: '0.8rem', color: 'text.secondary' }}>
-                {newImages.map((img, idx) => (
-                  <div key={idx}>{img.name}</div>
-                ))}
-              </Stack>
-            )}
+            Selected files: {newImages.length}
           </FormHelperText>
         </Box>
 
@@ -197,9 +205,9 @@ export default function ProductForm({ selectedProduct, onSuccess }) {
           variant="contained"
           sx={{ mt: 3 }}
           onClick={submit}
-          disabled={!form.name || !form.price || !form.stock || loading}
+          disabled={loading}
         >
-          {loading ? 'Processing...' : (selectedProduct ? 'Update Product' : 'Create Product')}
+          {loading ? 'Processing...' : selectedProduct ? 'Update' : 'Create'}
         </Button>
       </Box>
 

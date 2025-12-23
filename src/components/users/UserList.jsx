@@ -183,6 +183,7 @@ export default function UserList({ rows = [], onEdit, onDelete }) {
                   }}
                 >
                   <Button
+                  data-cy="edit-user-btn"
                     fullWidth
                     size="small"
                     variant="outlined"
@@ -197,6 +198,7 @@ export default function UserList({ rows = [], onEdit, onDelete }) {
                     Edit
                   </Button>
                   <Button
+                  data-cy="delete-user-btn"
                     fullWidth
                     size="small"
                     variant="outlined"
