@@ -1,6 +1,14 @@
-// src/config/imageBase.js
-export const API_BASE_URL = 'http://localhost:3000'; 
-export const UPLOAD_BASE_URL = `${API_BASE_URL}/uploads/`;
+export const buildImageUrl = (fileName) => {
+  if (!fileName) return '';
 
-export const buildImageUrl = (fileName) =>
-  fileName ? `${UPLOAD_BASE_URL}${fileName}` : '';
+  // Already absolute URL
+  if (fileName.startsWith('http')) return fileName;
+
+  // Backend base URL (IMPORTANT)
+  const base = import.meta.env.VITE_IMG_BASE_URL;
+
+  // Ensure no leading slash duplication
+  const cleanName = fileName.replace(/^\/+/, '');
+
+  return `${base}/uploads/products/${cleanName}`;
+};

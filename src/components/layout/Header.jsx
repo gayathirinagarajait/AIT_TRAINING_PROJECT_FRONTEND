@@ -38,7 +38,7 @@ export default function Header({ onMenuClick }) {
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        {/* Left side: Menu button (mobile) and title */}
+        {/* Left side: Menu button */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           {isMobile && onMenuClick && (
             <IconButton

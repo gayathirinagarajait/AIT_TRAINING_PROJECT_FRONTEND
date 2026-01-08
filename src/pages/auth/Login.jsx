@@ -151,70 +151,75 @@ export default function Login() {
             </Box>
 
             <Box component="form" onSubmit={submit} noValidate sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={form.email}
-                onChange={(e) => {
-                  setForm({ ...form, email: e.target.value });
-                  if (errors.email) setErrors({ ...errors, email: '' });
-                }}
-                error={!!errors.email}
-                helperText={errors.email}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailIcon color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                autoComplete="current-password"
-                value={form.password}
-                onChange={(e) => {
-                  setForm({ ...form, password: e.target.value });
-                  if (errors.password) setErrors({ ...errors, password: '' });
-                }}
-                onKeyDown={handleKeyDown}
-                error={!!errors.password}
-                helperText={errors.password}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockOutlinedIcon color="action" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment 
-                      position="end" 
-                      sx={{ cursor: 'pointer' }}
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                    </InputAdornment>
-                  ),
-                }}
-              />
+             <TextField
+  margin="normal"
+  required
+  fullWidth
+  id="email"
+  label="Email Address"
+  name="email"
+  autoComplete="email"
+  autoFocus
+  value={form.email}
+  onChange={(e) => {
+    setForm({ ...form, email: e.target.value });
+    if (errors.email) setErrors({ ...errors, email: '' });
+  }}
+  error={!!errors.email}
+  helperText={errors.email}
+  slotProps={{
+    input: {
+      startAdornment: (
+        <InputAdornment position="start">
+          <EmailIcon color="action" />
+        </InputAdornment>
+      ),
+    },
+  }}
+/>
+
+<TextField
+  margin="normal"
+  required
+  fullWidth
+  name="password"
+  label="Password"
+  type={showPassword ? 'text' : 'password'}
+  id="password"
+  autoComplete="current-password"
+  value={form.password}
+  onChange={(e) => {
+    setForm({ ...form, password: e.target.value });
+    if (errors.password) setErrors({ ...errors, password: '' });
+  }}
+  onKeyDown={handleKeyDown}
+  error={!!errors.password}
+  helperText={errors.password}
+  slotProps={{
+    input: {
+      startAdornment: (
+        <InputAdornment position="start">
+          <LockOutlinedIcon color="action" />
+        </InputAdornment>
+      ),
+      endAdornment: (
+        <InputAdornment
+          position="end"
+          sx={{ cursor: 'pointer' }}
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+        </InputAdornment>
+      ),
+    },
+  }}
+/>
+
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
                 <Link
                   component="button"
-                  type="button"  // CRITICAL FIX: Added type="button"
+                  type="button"  
                   variant="body2"
                   onClick={() => navigate('/forgot-password')}
                   sx={{ color: 'primary.main' }}
@@ -224,7 +229,7 @@ export default function Login() {
               </Box>
 
               <Button
-                type="submit"  // CRITICAL FIX: Now the ONLY submit button in the form
+                type="submit"  
                 fullWidth
                 variant="contained"
                 size="large"
@@ -252,7 +257,7 @@ export default function Login() {
                     Don't have an account?{' '}
                     <Link
                       component="button"
-                      type="button"  // CRITICAL FIX: Added type="button"
+                      type="button"  
                       variant="body2"
                       onClick={() => navigate('/register')}
                       sx={{ 

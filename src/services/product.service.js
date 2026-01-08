@@ -1,38 +1,68 @@
 import api from './api';
 
-// CREATE (with images)
+/* 
+   CREATE PRODUCT
+*/
 export const createProduct = async (data) => {
   const formData = new FormData();
-  Object.keys(data).forEach((key) => {
-    if (key === 'images') {
-      data.images.forEach((img) => formData.append('images', img));
-    } else {
-      formData.append(key, data[key]);
-    }
-  });
+
+  formData.append('name', data.name);
+  formData.append('price', String(data.price));
+  formData.append('stock', String(data.stock));
+
+  // images = File[]
+  if (Array.isArray(data.images)) {
+    data.images.forEach((file) => {
+      formData.append('images', file);
+    });
+  }
+
   return (await api.post('/products', formData)).data;
 };
 
-// GET (filters)
-export const getProducts = (params) =>
-  api.get('/products', { params }).then(res => res.data);
-
-// ✅ FIXED: Update now uses FormData like create
+/* 
+   UPDATE PRODUCT
+ */
 export const updateProduct = async (id, data) => {
   const formData = new FormData();
-  Object.keys(data).forEach((key) => {
-    if (key === 'images') {
-      data.images.forEach((img) => formData.append('images', img));
-    } else if (key === 'existingImages') {
-      // Send existing images to keep
-      data.existingImages.forEach((img) => formData.append('existingImages', img));
-    } else {
-      formData.append(key, data[key]);
-    }
-  });
+
+  if (data.name !== undefined) {
+    formData.append('name', data.name);
+  }
+
+  if (data.price !== undefined) {
+    formData.append('price', String(data.price));
+  }
+
+  if (data.stock !== undefined) {
+    formData.append('stock', String(data.stock));
+  }
+
+  // existing image filenames to KEEP
+  if (Array.isArray(data.existingImages)) {
+    data.existingImages.forEach((img) => {
+      formData.append('existingImages', img);
+    });
+  }
+
+  // new uploaded files
+  if (Array.isArray(data.images)) {
+    data.images.forEach((file) => {
+      formData.append('images', file);
+    });
+  }
+
   return (await api.put(`/products/${id}`, formData)).data;
 };
 
-// DELETE
+/* 
+   GET PRODUCTS
+*/
+export const getProducts = (params) =>
+  api.get('/products', { params }).then((res) => res.data);
+
+/* 
+   DELETE PRODUCT
+ */
 export const deleteProduct = (id) =>
-  api.delete(`/products/${id}`).then(res => res.data);
+  api.delete(`/products/${id}`).then((res) => res.data);
